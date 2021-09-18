@@ -1,5 +1,27 @@
 # Flight Ticket
 
+## Folder Structure
+
+```sh
+.
+├── seed  ## seed scripts
+├── src  ## source code
+│   ├── configs  ## system configs
+│   ├── constants  ## system constants
+│   ├── domains ## main biz logics
+│   ├── external  ## external apis
+│   ├── facilities  ## facilities that the system depends on
+│   ├── graphql  ## graphql API
+│   ├── models  ## DB models
+│   ├── rest  ## rest API
+│   ├── types  ## public types
+│   └── utils  ## utils
+└── test  ## test cases
+    ├── e2e  ## e2e test
+    ├── stress  ## stress/performance test
+    └── unit  ## unit test
+```
+
 ## Prerequisite
 1. docker
 2. docker-compose v3
@@ -88,4 +110,6 @@ yarn test:coverage
 yarn seed
 ```
 
-4. 如有系统启动或其他问题，请随时联系
+4. 航班号 flight_id=`999` 用于压力测试
+
+5. 如有系统启动或其他问题，请随时联系

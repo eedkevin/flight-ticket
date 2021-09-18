@@ -1,0 +1,12 @@
+.git/
+.vscode/
+node_modules/
+target/
+docker-compose.yml
+Dockerfile
+README.md
+.env
+.gitignore
+.eslint*
+.prettierrc
+.babelrc

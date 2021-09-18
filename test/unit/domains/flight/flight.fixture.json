@@ -1,0 +1,24 @@
+{
+  "listFlightThumbs": {
+    "flights": [
+      {
+        "id": 1,
+        "capacity": 80,
+        "base_price": 1000,
+        "route_id": 1
+      }
+    ],
+    "threadPoolForCalc": {
+      "1": 20
+    }
+  },
+  "getFlightThumb": {
+    "flight": {
+      "id": 1,
+      "capacity": 80,
+      "base_price": 1000,
+      "route_id": 1
+    },
+    "numOfRemainSeats": 20
+  }
+}

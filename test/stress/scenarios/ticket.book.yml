@@ -1,0 +1,10 @@
+scenarios:
+  - name: ticket book
+    flow:
+      - post:
+          url: "/api/rest/ticket/book"
+          headers:
+            Authorization: "{{ auth_token }}"
+          qs:
+            flight_id: "{{ flight_id }}"
+            traveler_id: "{{ traveler_id }}"

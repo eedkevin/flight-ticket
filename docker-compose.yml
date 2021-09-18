@@ -1,0 +1,113 @@
+version: "3"
+
+services:
+  flight-ticket-service:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        EXECUTABLE: src/server.js
+    restart: on-failure
+    networks:
+      - flight-ticket-network
+    ports:
+      - "3000:3000"
+    depends_on: 
+      - db-postgres
+      - db-redis
+      - nats
+    environment: 
+      APP_TICKET_LOCK_EXPIRE_SEC: 180
+      APP_TICKET_ALLOW_CANCEL_HOUR: 2 
+      REDIS_CONNECTION_URL: redis://db-redis
+      DATABASE_DIALECT: postgres
+      DATABASE_CONNECTION_URL: postgresql://root:root@db-postgres/flight_ticket
+      NATS_CONNECTION_URL: nats://nats:4222
+
+  flight-ticket-worker:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        EXECUTABLE: src/worker.js
+    restart: on-failure
+    networks:
+      - flight-ticket-network
+    depends_on: 
+      - db-postgres
+      - db-redis
+      - nats
+    environment: 
+      APP_TICKET_LOCK_EXPIRE_SEC: 180
+      APP_TICKET_ALLOW_CANCEL_HOUR: 2 
+      REDIS_CONNECTION_URL: redis://db-redis
+      DATABASE_DIALECT: postgres
+      DATABASE_CONNECTION_URL: postgresql://root:root@db-postgres/flight_ticket
+      NATS_CONNECTION_URL: nats://nats:4222
+  
+  db-seed:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      args:
+        EXECUTABLE: seed/index.js
+    restart: on-failure
+    networks:
+      - flight-ticket-network
+    depends_on: 
+      - db-postgres
+      - db-redis
+      - nats
+    environment: 
+      APP_TICKET_LOCK_EXPIRE_SEC: 180
+      APP_TICKET_ALLOW_CANCEL_HOUR: 2 
+      REDIS_CONNECTION_URL: redis://db-redis
+      DATABASE_DIALECT: postgres
+      DATABASE_CONNECTION_URL: postgresql://root:root@db-postgres/flight_ticket
+      NATS_CONNECTION_URL: nats://nats:4222
+
+  nats:
+    image: nats:2.4-alpine
+    restart: on-failure
+    networks:
+      - flight-ticket-network
+    ports: 
+      - "4222:4222"
+      - "8222:8222"
+
+  db-redis:
+    # image: redis:6.2-alpine
+    image: redislabs/rebloom
+    restart: on-failure
+    networks:
+      - flight-ticket-network
+    ports: 
+      - "6379:6379"
+
+  db-postgres:
+    image: postgres:9.6-alpine
+    restart: on-failure
+    networks:
+      - flight-ticket-network
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: flight_ticket
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: on-failure
+    networks:
+      - flight-ticket-network
+    ports:
+      - "8081:8081"
+    depends_on: 
+      - db-redis
+    environment:
+      REDIS_HOSTS: db-redis
+
+networks: 
+  flight-ticket-network:
+    driver: bridge

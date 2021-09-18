@@ -1,0 +1,11 @@
+[
+  {
+    "header": {
+      "authorization": "Bearer abc"
+    },
+    "input": {
+      "flight_id": 1,
+      "traveler_id": 1
+    }
+  }
+]

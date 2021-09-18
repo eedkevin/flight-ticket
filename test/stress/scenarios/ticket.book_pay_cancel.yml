@@ -1,0 +1,35 @@
+scenarios:
+  - name: ticket book->pay->cancel
+    flow:
+      - post:
+          url: "/api/rest/ticket/book"
+          headers:
+            Authorization: "{{ auth_token }}"
+          qs:
+            flight_id: "{{ flight_id }}"
+            traveler_id: "{{ traveler_id }}"
+          capture:
+            json: "$.data.ticket_no"
+            as: ticket_no
+          strict: false
+      - post:
+          url: "/api/rest/ticket/pay"
+          headers:
+            Authorization: "{{ auth_token }}"
+          qs:
+            flight_id: "{{ flight_id }}"
+            traveler_id: "{{ traveler_id }}"
+            ticket_no: "{{ ticket_no }}"
+          capture:
+            json: "$.data.payment_no"
+            as: payment_no
+          strict: false
+      - post:
+          url: "/api/rest/ticket/cancel"
+          headers:
+            Authorization: "{{ auth_token }}"
+          qs:
+            flight_id: "{{ flight_id }}"
+            traveler_id: "{{ traveler_id }}"
+            ticket_no: "{{ ticket_no }}"
+            payment_no: "{{ payment_no }}"

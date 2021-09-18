@@ -1,0 +1,14 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 10
+      arrivalRate: 10
+      rampTo:  100
+      maxVusers: 20
+  variables:
+    flight_id:
+      - 999
+    traveler_id:
+      - 1
+    auth_token:
+      - "Bearer abc"

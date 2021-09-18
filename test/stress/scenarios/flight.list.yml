@@ -1,0 +1,6 @@
+scenarios:
+  - name: flight list
+    flow:
+    - post:
+        url: "/api/graphql"
+        json: {"query":"query {listFlightThumbs {id,capacity,remainSeats,currentPrice}}"}
